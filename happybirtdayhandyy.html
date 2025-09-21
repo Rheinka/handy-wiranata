@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Happy Birthday</title>
+  <style>
+    :root{
+      --bg:#fff9f2;
+      --primary:#0b3d91;
+      --accent:#ff9800;
+      --cake-cream:#f7eeda;
+      --cake-choco:#6b3f1a;
+      --shadow: rgba(11,61,145,0.12);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:system-ui,sans-serif}
+
+    body{
+      background: radial-gradient(circle at 10% 10%, #fff, var(--bg));
+      display:flex;align-items:center;justify-content:center;
+      padding:32px;
+    }
+
+    /* Opening Screen */
+    .opening{
+      position:fixed;inset:0;
+      display:flex;flex-direction:column;
+      justify-content:center;align-items:center;
+      background:linear-gradient(135deg,#fbe8d3,#ffe6f7);
+      text-align:center;
+      z-index:100;
+      transition:opacity 1s ease;
+    }
+    .opening h1{font-size:2.2rem;color:var(--primary);margin:0 0 16px;}
+    .opening p{font-size:1.1rem;color:#444;margin:0 0 24px;}
+    .opening button{
+      padding:12px 20px;border:0;border-radius:10px;
+      background:linear-gradient(90deg,var(--primary),#1951d6);color:white;
+      font-weight:600;cursor:pointer;
+      box-shadow:0 6px 18px rgba(0,0,0,0.15);
+    }
+
+    /* Birthday Card (hidden at first) */
+    .card{display:none;width:100%;max-width:640px;background:white;border-radius:18px;
+      box-shadow:0 10px 30px var(--shadow);padding:28px;text-align:center;position:relative;}
+    h1{font-size:2.4rem;margin:0 0 10px;color:var(--primary)}
+    p{margin:.5rem 0 0;color:#666}
+
+    .cake{margin:80px auto 10px;position:relative;width:240px;}
+    .layer{position:relative;width:100%;border-radius:50%/18%;margin-top:-12px;
+      box-shadow:0 4px 8px rgba(0,0,0,0.12);}
+    .layer-top{height:50px;background:var(--cake-cream);z-index:3;}
+    .layer-middle{height:60px;background:var(--cake-choco);z-index:2;}
+    .layer-bottom{height:70px;background:var(--cake-cream);z-index:1;}
+
+    .candles{position:absolute;top:-30px;left:50%;transform:translateX(-50%);display:flex;gap:10px;}
+    .candle{width:14px;height:50px;border-radius:4px;position:relative;
+      box-shadow:0 2px 4px rgba(0,0,0,0.1);animation:sway 3s ease-in-out infinite;}
+    .candle:nth-child(1){background:linear-gradient(180deg,#ffefef,#ffcccc)}
+    .candle:nth-child(2){background:linear-gradient(180deg,#fff6e6,#ffd79a)}
+    .candle:nth-child(3){background:linear-gradient(180deg,#e6f7ff,#bfe8ff)}
+    @keyframes sway{0%,100%{transform:rotate(-2deg)}50%{transform:rotate(2deg)}}
+
+    .flame{width:16px;height:22px;border-radius:50%;position:absolute;top:-14px;left:50%;transform:translateX(-50%);
+      animation:flicker 0.2s infinite alternate;filter:drop-shadow(0 4px 6px rgba(255,160,50,0.25));}
+    .flame .outer{width:100%;height:100%;border-radius:50%;background:radial-gradient(circle at 35% 30%, #fff6b3 0%, #ffd05a 18%, #ff8a00 68%);}
+    .flame .inner{width:50%;height:50%;border-radius:50%;background:radial-gradient(circle at 30% 30%, #fff 0%, #fff1a8 20%, #ffb84a 40%);
+      position:absolute;top:28%;left:50%;transform:translateX(-50%);}
+    @keyframes flicker{from{transform:translateX(-50%) scale(1)}to{transform:translateX(-50%) scale(0.9)}}
+
+    button{padding:10px 16px;border-radius:10px;border:0;background:linear-gradient(90deg,var(--primary),#1951d6);
+      color:white;font-weight:600;cursor:pointer;margin:6px;}
+    button.secondary{background:transparent;color:var(--primary);border:1px solid rgba(11,61,145,0.2)}
+    .message{font-size:1rem;margin:10px 0;}
+
+    .confetti{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+    .confetti i{position:absolute;width:10px;height:14px;opacity:0.95;transform-origin:center;animation:fall linear infinite}
+  </style>
+</head>
+<body>
+
+  <!-- Opening -->
+  <div class="opening" id="opening">
+    <h1>Hai Pacarkuuuuuu ❤️</h1>
+    <p>I wanna give u something...</p>
+    <button onclick="startCelebration()">Klikkk Klikkkk Klikkkkk 🎁</button>
+  </div>
+
+  <!-- Birthday Card -->
+  <div class="card" id="birthdayCard">
+    <h1>Happy Birthday Sayangku Handy Wiranata!</h1>
+    <p>Semoga harimu penuh kebahagiaan dan diselimuti kasih sayang sama orang-orang sekitarmu yaaa. Jangan lupa tiup lilinnya :p</p>
+
+    <div class="cake">
+      <div class="candles" id="candles">
+        <div class="candle"><div class="flame"><span class="outer"></span><span class="inner"></span></div></div>
+        <div class="candle"><div class="flame"><span class="outer"></span><span class="inner"></span></div></div>
+        <div class="candle"><div class="flame"><span class="outer"></span><span class="inner"></span></div></div>
+      </div>
+      <div class="layer layer-top"></div>
+      <div class="layer layer-middle"></div>
+      <div class="layer layer-bottom"></div>
+    </div>
+
+    <div class="message" id="message">Klik tombol tiup lilin kalo mau tiuppppp</div>
+    <button id="blow">Tiup Lilin</button>
+    <button class="secondary" id="reset">Nyalakan Lagi</button>
+    <div class="confetti" id="confetti"></div>
+  </div>
+
+  <script>
+    function startCelebration(){
+      const opening=document.getElementById('opening');
+      const card=document.getElementById('birthdayCard');
+      opening.style.opacity='0';
+      setTimeout(()=>{
+        opening.style.display='none';
+        card.style.display='block';
+      },1000);
+    }
+
+    // confetti
+    const confettiNode = document.getElementById('confetti');
+    const colors = ['#ffdd57','#ff7b7b','#9be7ff','#c3ffbd','#ffd7a6','#b39eff'];
+    for(let i=0;i<30;i++){
+      const el=document.createElement('i');
+      el.style.left=Math.random()*100+'%';
+      el.style.top=(Math.random()*-20)+'%';
+      el.style.background=colors[Math.floor(Math.random()*colors.length)];
+      const duration=4+Math.random()*6;
+      el.style.animationDuration=duration+'s';
+      el.style.animationDelay=Math.random()*-12+'s';
+      el.style.width=(6+Math.random()*12)+'px';
+      el.style.height=(8+Math.random()*12)+'px';
+      confettiNode.appendChild(el);
+    }
+    const style=document.createElement('style');let rules='';
+    [...confettiNode.children].forEach((c,i)=>{
+      const yEnd=120+Math.floor(Math.random()*40);
+      rules+=`@keyframes fall${i}{0%{transform:translateY(-10vh) rotate(0deg);opacity:1}100%{transform:translateY(${yEnd}vh) rotate(540deg);opacity:0.95}}`;
+      c.style.animationName='fall'+i;
+    });
+    style.textContent=rules;document.head.appendChild(style);
+
+    const flameEls=[...document.querySelectorAll('.flame')];
+    const blowBtn=document.getElementById('blow');
+    const resetBtn=document.getElementById('reset');
+    const message=document.getElementById('message');
+
+    function extinguish(){
+      flameEls.forEach((f,i)=>{
+        f.animate([{opacity:1,transform:'translateX(-50%) scale(1)'},
+                   {opacity:0,transform:'translateX(-50%) scale(0.4) translateY(-8px)'}],
+                  {duration:650+i*80,fill:'forwards'});
+      });
+      message.textContent='Sekali Lagi Selamat Bertambah Usia ! Happy 22nd Birthdayyyyyy Cintaaa 🎉';
+      blowBtn.disabled=true;
+    }
+    function relight(){
+      flameEls.forEach((f)=>{
+        f.animate([{opacity:0,transform:'translateX(-50%) scale(0.4)'},
+                   {opacity:1,transform:'translateX(-50%) scale(1)'}],
+                  {duration:400,fill:'forwards'});
+      });
+      message.textContent='Wiii dinyalain lagi rekkk';
+      blowBtn.disabled=false;
+    }
+    blowBtn.onclick=extinguish;
+    resetBtn.onclick=relight;
+  </script>
+</body>
+</html>
